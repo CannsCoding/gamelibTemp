@@ -1,9 +1,23 @@
-(function(window, opspark, gamelibTemp) {
+(function (window, opspark, gamelibTemp) {
   window.gamelibTemp = window.gamelibTemp || {
     numz: {
       calculateDistance(obj1, obj2) {
         return Math.sqrt((obj1.x - obj2.x) ** 2 + (obj1.y - obj2.y) ** 2);
-      }
+      },
+      degreesToRadians(degrees) {
+        return degrees * Math.PI / 180;
+      },
+      radiansToDegrees(radians) {
+        return radians * 180 / Math.PI;
+      },
+      getAngleDegrees(pointA, pointB) {
+        const distanceX = pointB.x - pointA.x;
+        const distanceY = pointB.y - pointA.y;
+        const radians = Math.atan2(distanceY, distanceX);
+        const degrees = radians * 180 / Math.PI;
+        return degrees;
+      },
+
     },
     phyz: {
       /**
@@ -29,7 +43,42 @@
         body.x += body.velocityX;
         body.y += body.velocityY;
         body.rotation += body.rotationalVelocity;
-      }
+      },
+      makeBody: function (type, {
+        velocityX = 0,
+        velocityY = 0,
+        rotationalVelocity = 0,
+        integrity = 1,
+        density = 1,
+        volatility = 0
+      } = {}) {
+        if (type === undefined) throw new Error('You must provide a valid String for the type parameter!');
+        return {
+          type: type,
+          velocityX: velocityX,
+          velocityY: velocityY,
+          rotationalVelocity: rotationalVelocity,
+          integrity: integrity,
+          density: density,
+          volatility: volatility,
+
+          /**
+           * @param {Number} A number representing the force of the impact.
+           * @param {Object} The other body involved in the collision.
+           */
+          handleCollision(impact, body) {
+            // template method //
+          },
+
+          /**
+           * Can be overridden in the concrete body to provide a custom update()
+           * method.
+           */
+          update(event) {
+            // template method //
+          }
+        };
+      },
     },
   };
 }(window, window._));
